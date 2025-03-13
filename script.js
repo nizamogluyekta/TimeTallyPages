@@ -35,4 +35,50 @@ document.addEventListener('DOMContentLoaded', function() {
     // Run animation check on load and scroll
     window.addEventListener('scroll', animateOnScroll);
     animateOnScroll(); // Run once on page load
+
+    // Google Analytics event tracking for internal navigation
+    document.querySelectorAll('a').forEach(link => {
+        if (!link.id.includes('store-link')) { // Skip store links as they have dedicated tracking
+            link.addEventListener('click', function() {
+                const linkText = this.textContent.trim();
+                const linkHref = this.getAttribute('href');
+                
+                // Track internal link clicks
+                if (typeof gtag === 'function') {
+                    gtag('event', 'link_click', {
+                        'event_category': 'navigation',
+                        'event_label': linkText,
+                        'link_url': linkHref
+                    });
+                }
+            });
+        }
+    });
+
+    // Track scroll depth for engagement measurement
+    let scrollDepthTracked = {};
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        
+        const scrollPercentage = Math.round((scrollTop / (scrollHeight - clientHeight)) * 100);
+        
+        // Track at 25%, 50%, 75%, and 100% scroll depth
+        const depths = [25, 50, 75, 100];
+        
+        depths.forEach(depth => {
+            if (scrollPercentage >= depth && !scrollDepthTracked[depth]) {
+                scrollDepthTracked[depth] = true;
+                
+                if (typeof gtag === 'function') {
+                    gtag('event', 'scroll_depth', {
+                        'event_category': 'engagement',
+                        'event_label': depth + '%',
+                        'value': depth
+                    });
+                }
+            }
+        });
+    });
 });
