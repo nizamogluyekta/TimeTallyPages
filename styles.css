@@ -161,7 +161,14 @@ h1 {
 
 .store-icon {
     margin-right: 10px;
-    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.store-icon svg {
+    width: 24px;
+    height: 24px;
 }
 
 .store-text {
