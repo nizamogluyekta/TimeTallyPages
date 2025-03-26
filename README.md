@@ -1,2 +1,2 @@
 # TimeTallyPages
-Created pages for time tally application
+Created pages for time tally applicatio
